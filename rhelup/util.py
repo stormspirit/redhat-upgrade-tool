@@ -106,11 +106,18 @@ def kernelver(filename):
 
 def df(mnt, reserved=False):
     s = os.statvfs(mnt)
-    return s.f_bsize * (s.f_bfree if reserved else s.f_bavail)
+    if reserved:
+        free = s.f_bfree
+    else:
+        free = s.f_bavail
+    return s.f_bsize * free
 
 def hrsize(size, si=False, use_ib=False):
     powers = 'KMGTPEZY'
-    multiple = 1000 if si else 1024
+    if si:
+        multiple = 1000
+    else:
+        multiple = 1024
     if si:       suffix = 'B'
     elif use_ib: suffix = 'iB'
     else:        suffix = ''
