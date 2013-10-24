@@ -28,8 +28,8 @@ from threading import Thread
 import logging
 log = logging.getLogger(__package__+'.upgrade')
 
-from . import _
-from .util import df, hrsize
+from rhelup import _
+from rhelup.util import df, hrsize
 
 class TransactionSet(TransactionSetCore):
     flags = TransactionSetCore._flags

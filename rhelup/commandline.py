@@ -20,9 +20,9 @@
 import os, optparse, platform, sys
 from copy import copy
 
-from . import media
-from .sysprep import reset_boot, remove_boot, remove_cache, misc_cleanup
-from . import _
+from rhelup import media
+from rhelup.sysprep import reset_boot, remove_boot, remove_cache, misc_cleanup
+from rhelup import _
 
 import logging
 log = logging.getLogger(__package__)

@@ -24,10 +24,10 @@ import rpm
 sys.path.insert(0, '/usr/share/yum-cli')
 from output import YumTextMeter, CacheProgressCallback
 
-from .callback import *
-from . import terminal as term
+from rhelup.callback import *
+from rhelup import terminal as term
 
-from . import _
+from rhelup import _
 
 import logging
 log = logging.getLogger(__package__+".cli")

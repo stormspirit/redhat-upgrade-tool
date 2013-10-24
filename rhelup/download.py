@@ -21,9 +21,9 @@ import os
 import yum
 import struct
 import logging
-from .callback import BaseTsCallback
-from .treeinfo import Treeinfo, TreeinfoError
-from .conf import Config
+from rhelup.callback import BaseTsCallback
+from rhelup.treeinfo import Treeinfo, TreeinfoError
+from rhelup.conf import Config
 from yum.Errors import YumBaseError
 from yum.parser import varReplace
 from yum.constants import TS_REMOVE_STATES
@@ -33,10 +33,10 @@ enabled_plugins = ['blacklist', 'whiteout']
 disabled_plugins = ['rpm-warm-cache', 'remove-with-leaves', 'presto',
                     'auto-update-debuginfo', 'refresh-packagekit']
 
-from . import _
-from . import cachedir, upgradeconf, kernelpath, initrdpath, defaultkey
-from . import mirrormanager
-from .util import listdir, mkdir_p, rm_rf
+from rhelup import _
+from rhelup import cachedir, upgradeconf, kernelpath, initrdpath, defaultkey
+from rhelup import mirrormanager
+from rhelup.util import listdir, mkdir_p, rm_rf
 from shutil import copy2
 
 log = logging.getLogger(__package__+".yum") # maybe I should rename this..

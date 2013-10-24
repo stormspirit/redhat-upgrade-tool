@@ -32,7 +32,7 @@ Your pal,
 '''
 
 import logging
-from .logutils import NullHandler
+from rhelup.logutils import NullHandler
 log = logging.getLogger(__package__)
 log.addHandler(NullHandler())
 
