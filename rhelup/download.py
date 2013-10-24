@@ -68,9 +68,9 @@ def init_keyring(gpgdir):
     # set up gpgdir
     if not os.path.isdir(gpgdir):
         log.debug("creating gpgdir %s", gpgdir)
-        os.makedirs(gpgdir, 0o700)
+        os.makedirs(gpgdir, 0700)
     else:
-        os.chmod(gpgdir, 0o700)
+        os.chmod(gpgdir, 0700)
     os.environ['GNUPGHOME'] = gpgdir
 
 def import_key(keydata, hexkeyid, gpgdir):
