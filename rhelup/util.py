@@ -89,7 +89,8 @@ def rm_rf(d):
 def kernelver(filename):
     '''read the version number out of a vmlinuz file.'''
     # this algorithm came from /usr/share/magic
-    with open(filename) as f:
+    f = open(filename)
+    try:
         f.seek(514)
         if f.read(4) != 'HdrS':
             return None
@@ -97,6 +98,8 @@ def kernelver(filename):
         (offset,) = struct.unpack("<H", f.read(2))
         f.seek(offset+0x200)
         buf = f.read(256)
+    finally:
+        f.close()
     uname, nul, rest = buf.partition('\0')
     version, spc, rest = uname.partition(' ')
     return version

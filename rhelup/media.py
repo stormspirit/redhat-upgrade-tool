@@ -142,6 +142,9 @@ def write_systemd_unit(mount, unitdir, desc=None, unitopts=""):
     if isloop(mount.dev):
         mount = fix_loop_entry(mount)
     unit = join(unitdir, systemd_escape(mount.mnt)+'.mount')
-    with open(unit, 'w') as u:
+    u = open(unit, 'w')
+    try:
         u.write(unit_tmpl.format(desc=desc, unitopts=unitopts, mount=mount))
+    finally:
+        u.close()
     return unit

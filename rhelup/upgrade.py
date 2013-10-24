@@ -56,8 +56,11 @@ class TransactionSet(TransactionSetCore):
         log.debug('add_install(%s, %s, upgrade=%s)', path, key, upgrade)
         if key is None:
             key = path
-        with open(path) as fileobj:
+        fileobj = open(path)
+        try:
             retval, header = self.hdrFromFdno(fileobj)
+        finally:
+            fileobj.close()
         if retval != rpm.RPMRC_OK:
             raise rpm.error("error reading package header")
         if not self.addInstall(header, key, upgrade):
@@ -159,13 +162,16 @@ class TransactionError(Exception):
 def pipelogger(pipe, level=logging.INFO):
     logger = logging.getLogger(pkgname+".rpm")
     logger.info("opening pipe")
-    with open(pipe, 'r') as fd:
+    fd = open(pipe, 'r')
+    try:
         for line in fd:
             if line.startswith('D: '):
                 logger.debug(line[3:].rstrip())
             else:
                 logger.log(level, line.rstrip())
         logger.info("got EOF")
+    finally:
+        fd.close()
     logger.info("exiting")
 
 logging_to_rpm = {

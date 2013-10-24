@@ -18,6 +18,7 @@
 # Author: Will Woods <wwoods@redhat.com>
 
 import os
+import sys
 import yum
 import struct
 import logging
@@ -53,7 +54,7 @@ def raise_exception(failobj):
 
 pluginpath = []
 def yum_plugin_for_exc():
-    import sys, traceback
+    import traceback
     tb_files = [i[0] for i in traceback.extract_tb(sys.exc_info()[2])]
     log.debug("checking traceback files: %s", tb_files)
     log.debug("plugin path is %s", pluginpath)
@@ -419,9 +420,16 @@ class UpgradeDownloader(yum.YumBase):
 
         # Save kernel/initrd info so we can clean it up later
         mkdir_p(os.path.dirname(upgradeconf))
-        with Config(upgradeconf) as conf:
-            conf.set("boot", "kernel", kernel)
-            conf.set("boot", "initrd", initrd)
+        conf = Config(upgradeconf).__enter__()
+        exc_info, exc_value, exc_traceback = (None, None, None)
+        try:
+            try:
+                conf.set("boot", "kernel", kernel)
+                conf.set("boot", "initrd", initrd)
+            except:
+                exc_type, exc_value, exc_traceback = sys.exc_info()
+        finally:
+            conf.__exit__(exc_type, exc_value, exc_traceback)
 
         return kernel, initrd
 
@@ -546,10 +554,16 @@ class UpgradeDownloader(yum.YumBase):
         self._setup_keyring(gpgdir)
 
         # verify the signed file, writing plaintext to outfile
-        with open(signedfile) as inf:
-            with open(outfile, 'w') as outf:
+        inf = open(signedfile)
+        try:
+            outf = open(outfile, 'w')
+            try:
                 ctx = gpgme.Context()
                 sigresults = ctx.verify(inf, None, outf)
+            finally:
+                outf.close()
+        finally:
+            inf.close()
         # return a list of error messages. if it's empty, we're OK.
         # NOTE: this is enough detail for current use cases, but it's very
         # possible we'll want/need to just return sigresults and let the caller

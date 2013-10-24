@@ -18,6 +18,7 @@
 # Author: Will Woods <wwoods@redhat.com>
 
 import os
+import sys
 from shutil import copy2
 
 from rhelup import _
@@ -80,14 +81,25 @@ def link_pkgs(pkgs):
             os.remove(os.path.join(packagedir, f))
 
     # write packagelist
-    with open(packagelist, 'w') as outf:
+    outf = open(packagelist, 'w')
+    try:
         outf.writelines(p+'\n' for p in pkgbasenames)
+    finally:
+        outf.close()
 
     # write cleanup data
-    with Config(upgradeconf) as conf:
-        # packagedir should probably be last, since it contains upgradeconf
-        cleanupdirs = [cachedir, packagedir]
-        conf.set("cleanup", "dirs", ';'.join(cleanupdirs))
+    conf = Config(upgradeconf).__enter__()
+    exc_type, exc_value, exc_traceback = (None, None, None)
+    try:
+        try:
+            # packagedir should probably be last, since it contains upgradeconf
+            cleanupdirs = [cachedir, packagedir]
+            conf.set("cleanup", "dirs", ';'.join(cleanupdirs))
+        except:
+            exc_type, exc_value, exc_traceback = sys.exc_info()
+    finally:
+        conf.__exit__(exc_type, exc_value, exc_traceback)
+
 
 def setup_upgradelink():
     log.info("setting up upgrade symlink: %s->%s", upgradelink, packagedir)

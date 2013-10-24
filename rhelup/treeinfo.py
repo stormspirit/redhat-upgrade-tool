@@ -119,12 +119,15 @@ log = logging.getLogger(pkgname+".treeinfo")
 
 def hexdigest(filename, algo, blocksize=8192):
     hasher = hashlib.new(algo)
-    with open(filename, 'rb') as fobj:
+    fobj = open(filename, 'rb')
+    try:
         while True:
             data = fobj.read(blocksize)
             if not data:
                 break
             hasher.update(data)
+    finally:
+        fobj.close()
     return hasher.hexdigest()
 
 __all__ = ['Treeinfo', 'TreeinfoError']
@@ -248,8 +251,11 @@ class Treeinfo(RawConfigParser):
         if add_timestamp:
             self.add_timestamp()
         # TODO sort checksums to end
-        with open(self._path('.treeinfo'), 'w') as fp:
+        fp = open(self._path('.treeinfo'), 'w')
+        try:
             RawConfigParser.write(fp)
+        finally:
+            fp.close()
 
 
 # TODO: unit tests

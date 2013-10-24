@@ -50,20 +50,29 @@ def initramfs_append_files(initramfs, files):
     if isinstance(files, basestring):
         files = [files]
     filelist = ''.join(f+'\n' for f in files if open(f))
-    with open(initramfs, 'ab') as outfd:
+    outfd = open(initramfs, 'ab')
+    try:
         cmd = ["cpio", "-co"]
         cpio = Popen(cmd, stdin=PIPE, stdout=outfd, stderr=PIPE)
         (out, err) = cpio.communicate(input=filelist)
         if cpio.returncode:
             raise CalledProcessError(cpio.returncode, cmd, err)
+    finally:
+        outfd.close()
 
 def initramfs_append_images(initramfs, images):
     '''Append the given images to the named initramfs.
        Raises IOError if the files can't be read/written.'''
-    with open(initramfs, 'ab') as outfd:
+    outfd = open(initramfs, 'ab')
+    try:
         for i in images:
-            with open(i, 'rb') as infd:
+            infd = open(i, 'rb')
+            try:
                 copyfileobj(infd, outfd)
+            finally:
+                infd.close()
+    finally:
+        outfd.close()
 
 def need_mdadmconf():
     '''Does this system need /etc/mdadm.conf to boot?'''

@@ -38,8 +38,11 @@ class Config(RawConfigParser):
         RawConfigParser.write(self, fp)
 
     def write(self):
-        with open(self.filename, 'w') as outf:
+        outf = open(self.filename, 'w')
+        try:
             self.writefp(outf)
+        finally:
+            outf.close()
 
     def add_section(self, section, duplicate_ok=True):
         '''Add the named section, raising DuplicateSectionError if the section
