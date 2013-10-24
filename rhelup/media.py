@@ -18,7 +18,6 @@
 # Author: Will Woods <wwoods@redhat.com>
 
 import os, stat
-from collections import namedtuple
 from os.path import exists, join
 from rhelup.util import check_output, call, STDOUT, CalledProcessError
 from rhelup import pkgname
@@ -28,8 +27,39 @@ def check_call(cmd, stderr=STDOUT, *args, **kwargs):
     # Use stderr=STDOUT so CalledProcessError has mount output in e.output
     check_output(cmd, stderr=stderr, *args, **kwargs)
 
-class FstabEntry(namedtuple('FstabEntry','dev rawmnt type opts freq passno')):
-    __slots__ = ()
+class FstabEntry(object):
+    def __init__(self, dev, rawmnt, type, opts, freq, passno):
+        self._dev = dev
+        self._rawmnt = rawmnt
+        self._type = type
+        self._opts = opts
+        self._freq = freq
+        self._passno = passno
+
+    @property
+    def dev(self):
+        return self._dev
+
+    @property
+    def rawmnt(self):
+        return self._rawmnt
+
+    @property
+    def type(self):
+        return self._type
+
+    @property
+    def opts(self):
+        return self._opts
+
+    @property
+    def freq(self):
+        return self._freq
+
+    @property
+    def passno(self):
+        return self._passno
+
     @property
     def mnt(self):
         '''unescaped mountpoint'''

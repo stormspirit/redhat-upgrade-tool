@@ -6,19 +6,28 @@ NOTE: Importing this module adds a handler for SIGWINCH so it can update 'size'
 whenever the controlling tty changes size.'''
 
 import fcntl, struct, termios, signal, warnings
-from collections import namedtuple
 
 size = None
 ttyfd = 1
 
-class winsize(namedtuple('winsize', 'rows cols')):
+class winsize(object):
     '''
     The current size of the terminal.
 
     rows: Number of rows on the controlling terminal
     cols: Number of columns on the controlling terminal
     '''
-    pass
+    def __init__(self, rows, cols):
+        self._rows = rows
+        self._cols = cols
+    
+    @property
+    def rows(self):
+        return self._rows
+
+    @propert
+    def cols(self):
+        return self._cols
 
 def getsize(fd=ttyfd):
     '''Return the size of the tty attached to the given fd (default: stdin)'''
