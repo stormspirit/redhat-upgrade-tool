@@ -19,7 +19,7 @@
 
 import os, struct
 from shutil import rmtree
-from subprocess import Popen, CalledProcessError, PIPE, STDOUT
+from subprocess import Popen, PIPE, STDOUT
 from pipes import quote as shellquote
 import logging
 log = logging.getLogger('rhelup.util')
@@ -35,6 +35,15 @@ try:
     is_selinux_enabled.restype = c_bool
 except (ImportError, AttributeError, OSError):
     is_selinux_enabled = lambda: False
+
+class CalledProcessError(Exception):
+    """From subprocesses.CalledProcessError in Python 2.7"""
+    def __init__(self, returncode, cmd, output=None):
+        self.returncode = returncode
+        self.cmd = cmd
+        self.output = output
+    def __str__(self):
+        return "Command '%s' returned non-zero exit status %d" % (self.cmd, self.returncode)
 
 def call_output(cmd, *pargs, **kwargs):
     log.info("exec: `%s`", ' '.join(shellquote(a) for a in cmd))
