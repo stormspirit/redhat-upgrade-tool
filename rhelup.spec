@@ -8,6 +8,7 @@ URL:            https://github.com/dashea/rhelup
 Source0:        https://github.com/downloads/dashea/rhelup/%{name}-%{version}.tar.xz
 
 Requires:       grubby
+Requires:       m2crypto
 
 %if 0%{?fedora} >= 17
 # Require updates to various packages where necessary to fix bugs.
