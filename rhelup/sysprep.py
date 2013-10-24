@@ -67,7 +67,7 @@ def link_pkgs(pkgs):
                 os.remove(target)
             try:
                 os.link(pkgpath, target)
-            except OSError as e:
+            except OSError, e:
                 if e.errno == 18:
                     copy2(pkgpath, target)
                 else:
@@ -160,7 +160,7 @@ def prep_boot(kernel, initrd):
     updates = []
     try:
         updates = list(listdir(update_img_dir))
-    except (IOError, OSError) as e:
+    except (IOError, OSError), e:
         log.info("can't list update img dir %s: %s", update_img_dir, e.strerror)
     if updates:
         log.info("found updates in %s, appending to initrd", update_img_dir)

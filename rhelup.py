@@ -224,13 +224,13 @@ if __name__ == '__main__':
     try:
         exittype = "cleanly"
         main(args)
-    except KeyboardInterrupt as e:
+    except KeyboardInterrupt, e:
         print
         log.info("exiting on keyboard interrupt")
         if e.message:
             message(_("Exiting on keyboard interrupt (%s)") % e.message)
         raise SystemExit(1)
-    except YumBaseError as e:
+    except YumBaseError, e:
         print
         if isinstance(e.value, list):
             err = e.value.pop(0)
@@ -241,7 +241,7 @@ if __name__ == '__main__':
             message(_("Downloading failed: %s") % e)
         log.debug("Traceback (for debugging purposes):", exc_info=True)
         raise SystemExit(2)
-    except TransactionError as e:
+    except TransactionError, e:
         print
         message(_("Upgrade test failed with the following problems:"))
         for s in e.summaries:
@@ -251,7 +251,7 @@ if __name__ == '__main__':
             log.debug(p)
         log.error(_("Upgrade test failed."))
         raise SystemExit(3)
-    except Exception as e:
+    except Exception, e:
         pluginfile = yum_plugin_for_exc()
         if pluginfile:
             plugin, ext = os.path.splitext(os.path.basename(pluginfile))

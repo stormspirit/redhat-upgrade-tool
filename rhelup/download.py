@@ -221,7 +221,7 @@ class UpgradeDownloader(yum.YumBase):
             repofile = os.path.join(repodir, "%s.repo" % repo.id)
             try:
                 repo.write(open(repofile), 'w')
-            except IOError as e:
+            except IOError, e:
                 log.warn("couldn't write repofile for %s: %s", repo.id, str(e))
 
     # NOTE: could raise RepoError if metadata is missing/busted
@@ -318,7 +318,7 @@ class UpgradeDownloader(yum.YumBase):
             try:
                 log.debug("removing %s", f)
                 os.remove(f)
-            except IOError as e:
+            except IOError, e:
                 log.info("failed to remove %s", f)
         # TODO remove dirs that don't belong to any repo
 
@@ -397,11 +397,11 @@ class UpgradeDownloader(yum.YumBase):
             # copy the downloaded initrd to the target path
             copy2(initrd, initrdpath)
             initrd = initrdpath
-        except TreeinfoError as e:
+        except TreeinfoError, e:
             raise YumBaseError(_("invalid data in .treeinfo: %s") % str(e))
-        except yum.Errors.YumGPGCheckError as e:
+        except yum.Errors.YumGPGCheckError, e:
             raise YumBaseError(_("could not verify GPG signature: %s") % str(e))
-        except yum.URLGrabError as e:
+        except yum.URLGrabError, e:
             err = e.strerror
             if e.errno == 256:
                 err += "\n" + _("Last error was: %s") % e.errors[-1][1]

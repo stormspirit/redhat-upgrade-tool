@@ -220,7 +220,7 @@ def device_setup(args):
     elif args.iso:
         try:
             args.device = media.loopmount(args.iso)
-        except media.CalledProcessError as e:
+        except media.CalledProcessError, e:
             log.info("mount failure: %s", e.output)
             message('--iso: '+_('Unable to open %s') % args.iso)
             raise SystemExit(2)

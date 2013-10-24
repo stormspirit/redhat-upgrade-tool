@@ -67,7 +67,7 @@ def rlistdir(d):
 def mkdir_p(d):
     try:
         os.makedirs(d)
-    except OSError as e:
+    except OSError, e:
         if e.errno != 17:
             raise
 
@@ -76,7 +76,7 @@ def rm_f(f, rm=os.remove):
         return
     try:
         rm(f)
-    except (IOError, OSError) as e:
+    except (IOError, OSError), e:
         log.warn("failed to remove %s: %s", f, str(e))
 
 def rm_rf(d):

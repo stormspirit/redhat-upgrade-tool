@@ -193,7 +193,7 @@ class RPMUpgrade(object):
         for pkg in pkgfiles:
             try:
                 self.ts.add_install(pkg, upgrade=True)
-            except rpm.error as e:
+            except rpm.error, e:
                 log.warn('error adding pkg: %s', e)
                 # TODO: error callback
         log.debug('ts.check()')
