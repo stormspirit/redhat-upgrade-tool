@@ -24,8 +24,9 @@ from pipes import quote as shellquote
 import logging
 log = logging.getLogger('rhelup.util')
 
+from rhelup import pkgname
 import logging
-log = logging.getLogger(__package__+".util")
+log = logging.getLogger(pkgname+".util")
 
 try:
     from ctypes import cdll, c_bool

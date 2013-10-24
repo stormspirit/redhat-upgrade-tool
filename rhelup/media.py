@@ -21,6 +21,7 @@ import os, stat
 from collections import namedtuple
 from os.path import exists, join
 from rhelup.util import check_output, call, STDOUT, CalledProcessError
+from rhelup import pkgname
 from tempfile import mkdtemp
 
 def check_call(cmd, stderr=STDOUT, *args, **kwargs):
@@ -75,7 +76,7 @@ def removable():
 
 def loopmount(filename, mntpoint=None):
     if mntpoint is None:
-        mntpoint = mkdtemp(prefix=__package__+'.mnt.')
+        mntpoint = mkdtemp(prefix=pkgname+'.mnt.')
     check_call(['mount', '-oloop', filename, mntpoint])
     for m in mounts():
         if m.mnt == mntpoint:

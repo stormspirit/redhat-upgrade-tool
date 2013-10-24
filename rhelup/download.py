@@ -36,13 +36,14 @@ disabled_plugins = ['rpm-warm-cache', 'remove-with-leaves', 'presto',
 from rhelup import _
 from rhelup import cachedir, upgradeconf, kernelpath, initrdpath, defaultkey
 from rhelup import mirrormanager
+from rhelup import pkgname
 from rhelup.util import listdir, mkdir_p, rm_rf
 from shutil import copy2
 
-log = logging.getLogger(__package__+".yum") # maybe I should rename this..
+log = logging.getLogger(pkgname+".yum") # maybe I should rename this..
 
 # TODO: add --urlgrabdebug to enable this... or something
-#yum.urlgrabber.grabber.set_logger(logging.getLogger(__package__+".urlgrab"))
+#yum.urlgrabber.grabber.set_logger(logging.getLogger(pkgname+".urlgrab"))
 
 def mirrorlist(repo, arch='$basearch'):
     return mirrormanager + '?repo=%s&arch=%s' % (repo, arch)

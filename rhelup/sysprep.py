@@ -21,6 +21,7 @@ import os
 from shutil import copy2
 
 from rhelup import _
+from rhelup import pkgname
 from rhelup import cachedir, packagedir, packagelist, update_img_dir
 from rhelup import upgradeconf, upgradelink, upgraderoot
 from rhelup.media import write_systemd_unit
@@ -29,7 +30,7 @@ from rhelup.conf import Config
 from rhelup import boot
 
 import logging
-log = logging.getLogger(__package__+".sysprep")
+log = logging.getLogger(pkgname+".sysprep")
 
 upgrade_target_requires = "/lib/systemd/system/system-upgrade.target.requires"
 

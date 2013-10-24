@@ -22,6 +22,7 @@ import rpm
 import logging
 from rpmUtils.miscutils import formatRequire
 from yum.callbacks import ProcessTransBaseCallback
+from rhelup import pkgname
 
 def format_pkgtup(tup):
     (n,a,e,v,r) = tup
@@ -44,7 +45,7 @@ class BaseTsCallback(object):
 
     def __init__(self):
         self._openfds = dict()
-        self.log = logging.getLogger(__package__+".rpm")
+        self.log = logging.getLogger(pkgname+".rpm")
 
     def callback(self, what, amount, total, key, data):
         if what not in self.callback_map:
@@ -90,7 +91,7 @@ class RPMTsCallback(BaseTsCallback):
 class DownloadCallbackBase(ProcessTransBaseCallback):
     def __init__(self):
         ProcessTransBaseCallback.__init__(self)
-        self.log = logging.getLogger(__package__+".download")
+        self.log = logging.getLogger(pkgname+".download")
 
     # for Yum transaction callbacks (i.e. YumBase.processTransaction stuff)
     def event(self, state, data=None):
@@ -118,7 +119,7 @@ class DepsolveCallbackBase(object):
         self.yumobj = yumobj
         if yumobj:
             self.yum_setup(yumobj)
-        self.log = logging.getLogger(__package__+".depsolve")
+        self.log = logging.getLogger(pkgname+".depsolve")
         self.mode_counter = dict((m, 0) for m in self.modedict)
         self.missingreqs = set()
     def yum_setup(self, yumobj):

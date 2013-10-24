@@ -33,14 +33,17 @@ Your pal,
 
 import logging
 from rhelup.logutils import NullHandler
-log = logging.getLogger(__package__)
+
+pkgname = __name__
+
+log = logging.getLogger(pkgname)
 log.addHandler(NullHandler())
 
 import gettext
-t = gettext.translation(__package__, "/usr/share/locale", fallback=True)
+t = gettext.translation(pkgname, "/usr/share/locale", fallback=True)
 _ = t.lgettext
 
-kernel_id = __package__
+kernel_id = pkgname
 # NOTE: new-kernel-pkg requires this kernel name/path
 kernelpath = '/boot/vmlinuz-%s' % kernel_id
 initrdpath = '/boot/initramfs-%s.img' % kernel_id
@@ -55,4 +58,4 @@ upgraderoot = '/system-upgrade-root'
 mirrormanager = ''
 defaultkey = ''
 
-update_img_dir = '/etc/' + __package__ + '/update.img.d'
+update_img_dir = '/etc/' + pkgname + '/update.img.d'

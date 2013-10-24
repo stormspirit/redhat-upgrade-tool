@@ -19,6 +19,9 @@
 
 import logging
 
+# Can't use rhelup.pkgname here since that would cause a circular import
+pkgname = __name__.split(".")[0]
+
 class CompatNullHandler(logging.Handler):
     def emit(self, record):
         pass
@@ -51,7 +54,7 @@ class Formatter(logging.Formatter):
             record.levelsym = '(D%d)' % (10-record.levelno)
         return logging.Formatter.format(self, record)
 
-def debuglog(filename, level=logging.DEBUG, loggername=__package__):
+def debuglog(filename, level=logging.DEBUG, loggername=pkgname):
     # for even more debugging info:
     #import yum.logginglevels
     #level=yum.logginglevels.DEBUG_2
@@ -62,7 +65,7 @@ def debuglog(filename, level=logging.DEBUG, loggername=__package__):
     logger.setLevel(level)
     logger.addHandler(h)
 
-def consolelog(level=logging.WARNING, loggername=__package__, tty=None):
+def consolelog(level=logging.WARNING, loggername=pkgname, tty=None):
     h = logging.StreamHandler(tty)
     h.setLevel(level)
     formatter = logging.Formatter('%(name)s %(levelname)s: %(message)s')

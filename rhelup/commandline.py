@@ -23,9 +23,10 @@ from copy import copy
 from rhelup import media
 from rhelup.sysprep import reset_boot, remove_boot, remove_cache, misc_cleanup
 from rhelup import _
+from rhelup import pkgname
 
 import logging
-log = logging.getLogger(__package__)
+log = logging.getLogger(pkgname)
 
 def parse_args(gui=False):
     p = optparse.OptionParser(option_class=Option,
@@ -41,7 +42,7 @@ def parse_args(gui=False):
         const=logging.DEBUG, help=_('print lots of debugging info'))
     p.set_defaults(loglevel=logging.WARNING)
 
-    p.add_option('--debuglog', default='/var/log/%s.log' % __package__,
+    p.add_option('--debuglog', default='/var/log/%s.log' % pkgname,
         help=_('write lots of debugging output to the given file'))
 
     p.add_option('--reboot', action='store_true', default=False,
@@ -106,7 +107,7 @@ def parse_args(gui=False):
             dest='clean', const='bootloader', default=None,
             help=_('remove any modifications made to bootloader'))
         clean.add_option('--clean', action='store_const', const='all',
-            help=_('clean up everything written by %s') % __package__)
+            help=_('clean up everything written by %s') % pkgname)
         p.add_option('--expire-cache', action='store_true', default=False,
             help=optparse.SUPPRESS_HELP)
         p.add_option('--clean-metadata', action='store_true', default=False,

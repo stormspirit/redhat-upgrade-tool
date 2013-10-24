@@ -28,9 +28,10 @@ from rhelup.callback import *
 from rhelup import terminal as term
 
 from rhelup import _
+from rhelup import pkgname
 
 import logging
-log = logging.getLogger(__package__+".cli")
+log = logging.getLogger(pkgname+".cli")
 
 
 class SimpleProgress(object):

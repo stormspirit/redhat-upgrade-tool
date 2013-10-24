@@ -25,8 +25,10 @@ from rpm._rpm import ts as TransactionSetCore
 import os, tempfile
 from threading import Thread
 
+from rhelup import pkgname
+
 import logging
-log = logging.getLogger(__package__+'.upgrade')
+log = logging.getLogger(pkgname+'.upgrade')
 
 from rhelup import _
 from rhelup.util import df, hrsize
@@ -155,7 +157,7 @@ class TransactionError(Exception):
         self.summaries = summarize_problems(problems)
 
 def pipelogger(pipe, level=logging.INFO):
-    logger = logging.getLogger(__package__+".rpm")
+    logger = logging.getLogger(pkgname+".rpm")
     logger.info("opening pipe")
     with open(pipe, 'r') as fd:
         for line in fd:
