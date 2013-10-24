@@ -7,7 +7,26 @@ from distutils import log
 
 import os
 from os.path import join, basename
-from subprocess import check_call
+from subprocess import call
+
+class CalledProcessError(Exception):
+    """From subprocess.CalledProcessError in Python 2.7"""
+    def __init__(self, returncode, cmd, output=None):
+        self.returncode = returncode
+        self.cmd = cmd
+        self.output = output
+    def __str__(self):
+        return "Command '%s' returned non-zero exit status %d" % (self.cmd, self.returncode)
+
+def check_call(*popenargs, **kwargs):
+    """From subprocess.check_call in Python 2.7"""
+    retcode = call(*popenargs, **kwargs)
+    if retcode:
+        cmd = kwargs.get("args")
+        if cmd is None:
+            cmd = popenargs[0]
+        raise CalledProcessError(retcode, cmd)
+    return 0
 
 class Gettext(Command):
     description = "Use po/POTFILES.in to generate po/<name>.pot"
