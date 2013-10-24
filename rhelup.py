@@ -222,45 +222,46 @@ if __name__ == '__main__':
     log.info("%s starting at %s", sys.argv[0], time.asctime())
 
     try:
-        exittype = "cleanly"
-        main(args)
-    except KeyboardInterrupt, e:
-        print
-        log.info("exiting on keyboard interrupt")
-        if e.message:
-            message(_("Exiting on keyboard interrupt (%s)") % e.message)
-        raise SystemExit(1)
-    except YumBaseError, e:
-        print
-        if isinstance(e.value, list):
-            err = e.value.pop(0)
-            message(_("Downloading failed: %s") % err)
-            for p in e.value:
-                message("  %s" % p)
-        else:
-            message(_("Downloading failed: %s") % e)
-        log.debug("Traceback (for debugging purposes):", exc_info=True)
-        raise SystemExit(2)
-    except TransactionError, e:
-        print
-        message(_("Upgrade test failed with the following problems:"))
-        for s in e.summaries:
-            message(s)
-        log.debug("Detailed transaction problems:")
-        for p in e.problems:
-            log.debug(p)
-        log.error(_("Upgrade test failed."))
-        raise SystemExit(3)
-    except Exception, e:
-        pluginfile = yum_plugin_for_exc()
-        if pluginfile:
-            plugin, ext = os.path.splitext(os.path.basename(pluginfile))
-            log.error(_("The '%s' yum plugin has crashed.") % plugin)
-            log.error(_("Please report this problem to the plugin developers:"),
-                      exc_info=True)
+        try:
+            exittype = "cleanly"
+            main(args)
+        except KeyboardInterrupt, e:
+            print
+            log.info("exiting on keyboard interrupt")
+            if e.message:
+                message(_("Exiting on keyboard interrupt (%s)") % e.message)
             raise SystemExit(1)
-        log.info("Exception:", exc_info=True)
-        exittype = "with unhandled exception"
-        raise
+        except YumBaseError, e:
+            print
+            if isinstance(e.value, list):
+                err = e.value.pop(0)
+                message(_("Downloading failed: %s") % err)
+                for p in e.value:
+                    message("  %s" % p)
+            else:
+                message(_("Downloading failed: %s") % e)
+            log.debug("Traceback (for debugging purposes):", exc_info=True)
+            raise SystemExit(2)
+        except TransactionError, e:
+            print
+            message(_("Upgrade test failed with the following problems:"))
+            for s in e.summaries:
+                message(s)
+            log.debug("Detailed transaction problems:")
+            for p in e.problems:
+                log.debug(p)
+            log.error(_("Upgrade test failed."))
+            raise SystemExit(3)
+        except Exception, e:
+            pluginfile = yum_plugin_for_exc()
+            if pluginfile:
+                plugin, ext = os.path.splitext(os.path.basename(pluginfile))
+                log.error(_("The '%s' yum plugin has crashed.") % plugin)
+                log.error(_("Please report this problem to the plugin developers:"),
+                          exc_info=True)
+                raise SystemExit(1)
+            log.info("Exception:", exc_info=True)
+            exittype = "with unhandled exception"
+            raise
     finally:
         log.info("%s exiting %s at %s", sys.argv[0], exittype, time.asctime())
