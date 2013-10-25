@@ -181,7 +181,7 @@ def VERSION(option, opt, value):
     if value.lower() == 'rawhide':
         return 'rawhide'
 
-    distro, version, id = platform.linux_distribution()
+    distro, version, id = platform.dist()
     version = float(version)
 
     if float(value) >= version:
