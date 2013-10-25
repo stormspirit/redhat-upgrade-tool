@@ -12,7 +12,7 @@ Source0:        https://github.com/downloads/dashea/rhelup/%{name}-%{version}.ta
 
 BuildRoot:      %{_tmppath}/%{name}-root
 
-Requires:       grubby
+Requires:       mkinitrd
 Requires:       m2crypto
 
 %if 0%{?fedora} >= 17
