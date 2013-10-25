@@ -34,10 +34,6 @@ from rhelup import _
 from rhelup.util import df, hrsize
 
 class TransactionSet(TransactionSetCore):
-    flags = TransactionSetCore._flags
-    vsflags = TransactionSetCore._vsflags
-    color = TransactionSetCore._color
-
     def run(self, callback, data, probfilter):
         log.debug('ts.run()')
         rv = TransactionSetCore.run(self, callback, data, probfilter)
@@ -254,11 +250,11 @@ class RPMUpgrade(object):
         return rv
 
     def test_transaction(self, callback):
-        self.ts.flags = rpm.RPMTRANS_FLAG_TEST
+        old_flags = self.ts.setFlags(rpm.RPMTRANS_FLAG_TEST)
         try:
             return self.run_transaction(callback)
         finally:
-            self.ts.flags &= ~rpm.RPMTRANS_FLAG_TEST
+            self.ts.setFlags(old_flags)
 
     def __del__(self):
         if self.logpipe:
