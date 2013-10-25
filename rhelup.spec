@@ -8,6 +8,8 @@ License:        GPLv2+
 URL:            https://github.com/dashea/rhelup
 Source0:        https://github.com/downloads/dashea/rhelup/%{name}-%{version}.tar.xz
 
+BuildRoot:      %{_tmppath}/%{name}-root
+
 Requires:       grubby
 Requires:       m2crypto
 
