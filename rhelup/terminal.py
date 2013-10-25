@@ -25,7 +25,7 @@ class winsize(object):
     def rows(self):
         return self._rows
 
-    @propert
+    @property
     def cols(self):
         return self._cols
 
