@@ -33,17 +33,24 @@ log = logging.getLogger(pkgname+'.upgrade')
 from rhelup import _
 from rhelup.util import df, hrsize
 
-class TransactionSet(TransactionSetCore):
+class TransactionSet(object):
+    def __init__(self, *args, **kwargs):
+        self._ts = TransactionSetCore(*args, **kwargs)
+
+    # Pass through most everything to self._ts
+    def __getattr__(self, name):
+        return getattr(self._ts, name)
+
     def run(self, callback, data, probfilter):
         log.debug('ts.run()')
-        rv = TransactionSetCore.run(self, callback, data, probfilter)
+        rv = self._ts.run(callback, data, probfilter)
         problems = self.problems()
         if rv != rpm.RPMRC_OK and problems:
             raise TransactionError(problems)
         return rv
 
     def check(self, *args, **kwargs):
-        TransactionSetCore.check(self, *args, **kwargs)
+        self._ts.check(self, *args, **kwargs)
         # NOTE: rpm.TransactionSet throws out all problems but these
         return [p for p in self.problems()
                   if p.type in (rpm.RPMPROB_CONFLICT, rpm.RPMPROB_REQUIRES)]
