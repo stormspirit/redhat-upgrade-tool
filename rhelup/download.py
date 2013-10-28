@@ -421,7 +421,7 @@ class UpgradeDownloader(yum.YumBase):
         # Save kernel/initrd info so we can clean it up later
         mkdir_p(os.path.dirname(upgradeconf))
         conf = Config(upgradeconf).__enter__()
-        exc_info, exc_value, exc_traceback = (None, None, None)
+        exc_type, exc_value, exc_traceback = (None, None, None)
         try:
             try:
                 conf.set("boot", "kernel", kernel)
