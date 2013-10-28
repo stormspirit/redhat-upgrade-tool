@@ -98,13 +98,10 @@ class UpgradeDownloader(yum.YumBase):
         if version:
             self.preconf.releasever = version
         self.cacheonly = cacheonly
-        self.prerepoconf.cachedir = cachedir
-        self.prerepoconf.cache = cacheonly
-        log.debug("prerepoconf.cache=%i", self.prerepoconf.cache)
+        self._cachedir = cachedir
         self.instrepoid = None
         self.disabled_repos = []
         self._treeinfo = None
-        self.prerepoconf.failure_callback = raise_exception
         self._repoprogressbar = None
         # TODO: locking to prevent multiple instances
         self.verbose_logger = log
@@ -117,6 +114,7 @@ class UpgradeDownloader(yum.YumBase):
             conf.disable_excludes = ['all']
             conf.cache = self.cacheonly
             conf.deltarpm = 0
+            conf.cachedir = self._cachedir
             log.debug("conf.cache=%i", conf.cache)
         return conf
 
@@ -139,6 +137,7 @@ class UpgradeDownloader(yum.YumBase):
         r.failure_obj = raise_exception
         r.mirror_failure_obj = raise_exception
         r.baseurl = [varReplace(u, self.conf.yumvar) for u in baseurls if u]
+        r.setFailureObj(raise_exception)
         if mirrorlist:
             r.mirrorlist = varReplace(mirrorlist, self.conf.yumvar)
         self._repos.add(r)
@@ -147,8 +146,8 @@ class UpgradeDownloader(yum.YumBase):
     def setup_repos(self, callback=None, progressbar=None, repos=[]):
         '''Return a list of repos that had problems setting up.'''
         # These will set up progressbar and callback when we actually do setup
-        self.prerepoconf.progressbar = progressbar
-        self.prerepoconf.callback = callback
+        self._repos.setProgressBar(progressbar)
+        self._repos.callback = callback
         self._repoprogressbar = progressbar
 
         # TODO invalidate cache if the version doesn't match previous version
