@@ -206,8 +206,9 @@ class UpgradeDownloader(yum.YumBase):
                 log.info("repo %s seems OK" % repo.id)
 
             # Disable gpg key checking for the repos, if requested
-            if self._override_sigchecks:
-                repo._override_sigchecks = True
+            if not self.conf.gpgcheck:
+                repo.gpgcheck = False
+                repo.repo_gpgcheck = False
 
         log.debug("repos.cache=%i", self.repos.cache)
 
@@ -331,7 +332,7 @@ class UpgradeDownloader(yum.YumBase):
             log.debug("using cached .treeinfo %s", outfile)
             return outfile
 
-        if self.instrepo.gpgcheck and not self._override_sigchecks:
+        if self.instrepo.gpgcheck:
             log.debug("fetching .treeinfo.signed from '%s'", self.instrepoid)
             fn = self.instrepo.grab.urlgrab('.treeinfo.signed',
                                             outfile+'.signed',
@@ -546,7 +547,7 @@ class UpgradeDownloader(yum.YumBase):
         keys imported and has its own signature verification code, but AFAICT
         it doesn't (at least not in any way reachable from Python), so..
         '''
-        if self._override_sigchecks:
+        if not self.conf.gpgcheck:
             return []
 
         # set up our own GPG keyring containing all the trusted keys

@@ -108,7 +108,8 @@ def main(args):
                          disable_plugins=args.disable_plugins)
 
     if args.nogpgcheck:
-        f._override_sigchecks = True
+        f.conf.gpgcheck = False
+        f.conf.repo_gpgcheck = False
 
     if args.expire_cache:
         print "expiring cache files"
