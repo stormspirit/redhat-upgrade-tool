@@ -19,8 +19,8 @@
 
 import os, stat
 from os.path import exists, join
-from rhelup.util import check_output, call, STDOUT, CalledProcessError
-from rhelup import pkgname
+from redhat_upgrade_tool.util import check_output, call, STDOUT, CalledProcessError
+from redhat_upgrade_tool import pkgname
 from tempfile import mkdtemp
 
 def check_call(cmd, stderr=STDOUT, *args, **kwargs):

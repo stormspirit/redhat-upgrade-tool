@@ -25,13 +25,13 @@ from rpm._rpm import ts as TransactionSetCore
 import os, tempfile
 from threading import Thread
 
-from rhelup import pkgname
+from redhat_upgrade_tool import pkgname
 
 import logging
 log = logging.getLogger(pkgname+'.upgrade')
 
-from rhelup import _
-from rhelup.util import df, hrsize
+from redhat_upgrade_tool import _
+from redhat_upgrade_tool.util import df, hrsize
 
 class TransactionSet(object):
     def __init__(self, *args, **kwargs):

@@ -32,7 +32,7 @@ Your pal,
 '''
 
 import logging
-from rhelup.logutils import NullHandler
+from redhat_upgrade_tool.logutils import NullHandler
 
 pkgname = __name__
 

@@ -21,10 +21,8 @@ import os, struct
 from shutil import rmtree
 from subprocess import Popen, PIPE, STDOUT
 from pipes import quote as shellquote
-import logging
-log = logging.getLogger('rhelup.util')
 
-from rhelup import pkgname
+from redhat_upgrade_tool import pkgname
 import logging
 log = logging.getLogger(pkgname+".util")
 

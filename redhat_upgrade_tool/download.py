@@ -22,9 +22,9 @@ import sys
 import yum
 import struct
 import logging
-from rhelup.callback import BaseTsCallback
-from rhelup.treeinfo import Treeinfo, TreeinfoError
-from rhelup.conf import Config
+from redhat_upgrade_tool.callback import BaseTsCallback
+from redhat_upgrade_tool.treeinfo import Treeinfo, TreeinfoError
+from redhat_upgrade_tool.conf import Config
 from yum.Errors import YumBaseError
 from yum.parser import varReplace
 from yum.constants import TS_REMOVE_STATES
@@ -34,11 +34,11 @@ enabled_plugins = ['blacklist', 'whiteout']
 disabled_plugins = ['rpm-warm-cache', 'remove-with-leaves', 'presto',
                     'auto-update-debuginfo', 'refresh-packagekit']
 
-from rhelup import _
-from rhelup import cachedir, upgradeconf, kernelpath, initrdpath, defaultkey
-from rhelup import mirrormanager
-from rhelup import pkgname
-from rhelup.util import listdir, mkdir_p, rm_rf
+from redhat_upgrade_tool import _
+from redhat_upgrade_tool import cachedir, upgradeconf, kernelpath, initrdpath, defaultkey
+from redhat_upgrade_tool import mirrormanager
+from redhat_upgrade_tool import pkgname
+from redhat_upgrade_tool.util import listdir, mkdir_p, rm_rf
 from shutil import copy2
 
 log = logging.getLogger(pkgname+".yum") # maybe I should rename this..

@@ -17,7 +17,7 @@
 #
 # Author: Will Woods <wwoods@redhat.com>
 
-from rhelup.util import check_output, PIPE, Popen, CalledProcessError
+from redhat_upgrade_tool.util import check_output, PIPE, Popen, CalledProcessError
 from shutil import copyfileobj
 
 kernelprefix = "/boot/vmlinuz-"

@@ -29,7 +29,7 @@ A typical .treeinfo file looks like this:
     timestamp = 1337720130.41
     variant = Server
     version = 7.0
-    packagedir = 
+    packagedir =
     arch = x86_64
 
     [stage2]
@@ -109,7 +109,7 @@ import time
 from os.path import join, normpath
 import logging
 from StringIO import StringIO
-from rhelup import pkgname
+from redhat_upgrade_tool import pkgname
 
 # TODO: release this separately so it can be used by other stuff
 #       (pungi, libvirt, etc.)

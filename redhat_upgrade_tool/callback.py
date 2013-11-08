@@ -22,7 +22,7 @@ import rpm
 import logging
 from rpmUtils.miscutils import formatRequire
 from yum.callbacks import ProcessTransBaseCallback
-from rhelup import pkgname
+from redhat_upgrade_tool import pkgname
 
 def format_pkgtup(tup):
     (n,a,e,v,r) = tup

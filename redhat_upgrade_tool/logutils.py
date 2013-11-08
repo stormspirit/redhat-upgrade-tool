@@ -19,7 +19,7 @@
 
 import logging
 
-# Can't use rhelup.pkgname here since that would cause a circular import
+# Can't use redhat_upgrade_tool.pkgname here since that would cause a circular import
 pkgname = __name__.split(".")[0]
 
 class CompatNullHandler(logging.Handler):

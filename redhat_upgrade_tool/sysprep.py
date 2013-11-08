@@ -21,14 +21,14 @@ import os
 import sys
 from shutil import copy2
 
-from rhelup import _
-from rhelup import pkgname
-from rhelup import cachedir, packagedir, packagelist, update_img_dir
-from rhelup import upgradeconf, upgradelink, upgraderoot
-from rhelup.media import write_systemd_unit
-from rhelup.util import listdir, mkdir_p, rm_f, rm_rf, is_selinux_enabled, kernelver
-from rhelup.conf import Config
-from rhelup import boot
+from redhat_upgrade_tool import _
+from redhat_upgrade_tool import pkgname
+from redhat_upgrade_tool import cachedir, packagedir, packagelist, update_img_dir
+from redhat_upgrade_tool import upgradeconf, upgradelink, upgraderoot
+from redhat_upgrade_tool.media import write_systemd_unit
+from redhat_upgrade_tool.util import listdir, mkdir_p, rm_f, rm_rf, is_selinux_enabled, kernelver
+from redhat_upgrade_tool.conf import Config
+from redhat_upgrade_tool import boot
 
 import logging
 log = logging.getLogger(pkgname+".sysprep")

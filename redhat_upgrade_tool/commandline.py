@@ -20,10 +20,10 @@
 import os, optparse, platform, sys
 from copy import copy
 
-from rhelup import media
-from rhelup.sysprep import reset_boot, remove_boot, remove_cache, misc_cleanup
-from rhelup import _
-from rhelup import pkgname
+from redhat_upgrade_tool import media
+from redhat_upgrade_tool.sysprep import reset_boot, remove_boot, remove_cache, misc_cleanup
+from redhat_upgrade_tool import _
+from redhat_upgrade_tool import pkgname
 
 import logging
 log = logging.getLogger(pkgname)

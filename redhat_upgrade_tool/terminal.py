@@ -20,7 +20,7 @@ class winsize(object):
     def __init__(self, rows, cols):
         self._rows = rows
         self._cols = cols
-    
+
     @property
     def rows(self):
         return self._rows
