@@ -146,9 +146,9 @@ class DepsolveCallbackBase(object):
             self.log.debug('%s: remove (%s)',pkg, self.modedict[mode])
         elif mode in ('u', 'i', 'd', 'r', 'o'):
             self.log.debug('%s: install (%s)', pkg, self.modedict[mode])
-    def procReqPo(self, po, formatted_req):
+    def procReq(self, po, formatted_req):
         self.log.debug('%s → %s', po, formatted_req)
-    def procConflictPo(self, po, formatted_conflict):
+    def procConflict(self, po, formatted_conflict):
         self.log.debug('CONFLICT: %s → %s', po, formatted_conflict)
     def unresolved(self, msg):
         self.log.debug('UNRESOLVED DEP: %s', msg)
