@@ -43,24 +43,29 @@ class CalledProcessError(Exception):
     def __str__(self):
         return "Command '%s' returned non-zero exit status %d" % (self.cmd, self.returncode)
 
-def call_output(cmd, *pargs, **kwargs):
-    log.info("exec: `%s`", ' '.join(shellquote(a) for a in cmd))
-    p = Popen(cmd, stdout=PIPE, stderr=PIPE, *pargs, **kwargs)
-    (out, err) = p.communicate()
-    retcode = p.poll()
-    return (retcode, out, err)
+def call(*popenargs, **kwargs):
+    return Popen(*popenargs, **kwargs).wait()
 
-def call(cmd, *pargs, **kwargs):
-    return call_output(cmd, *pargs, **kwargs)[0]
-
-def check_output(cmd, *pargs, **kwargs):
-    (retcode, out, err) = call_output(cmd, *pargs, **kwargs)
+def check_output(*popenargs, **kwargs):
+    if 'stdout' in kwargs:
+        raise ValueError('stdout argument not allowed, it will be overridden.')
+    process = Popen(stdout=PIPE, *popenargs, **kwargs)
+    output, unused_err = process.communicate()
+    retcode = process.poll()
     if retcode:
-        raise CalledProcessError(retcode, cmd, output=out)
-    return out
+        cmd = kwargs.get("args")
+        if cmd is None:
+            cmd = popenargs[0]
+        raise CalledProcessError(retcode, cmd, output=output)
+    return output
 
-def check_call(cmd, *pargs, **kwargs):
-    check_output(cmd, *pargs, **kwargs)
+def check_call(*popenargs, **kwargs):
+    retcode = call(*popenargs, **kwargs)
+    if retcode:
+        cmd = kwargs.get("args")
+        if cmd is None:
+            cmd = popenargs[0]
+        raise CalledProcessError(retcode, cmd)
     return 0
 
 def listdir(d):
