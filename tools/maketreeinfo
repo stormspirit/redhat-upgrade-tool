@@ -20,6 +20,7 @@
 # Author: Will Woods <wwoods@redhat.com>
 
 import os, sys, time, platform
+import hashlib
 import argparse
 from rpmUtils.arch import getBaseArch
 
@@ -85,8 +86,7 @@ def parse_args():
         help='add an upgrade image (relative to TOPDIR)')
 
     checksum = p.add_argument_group('[checksums] section')
-    # Hardcode algorithms supported by hashlib in python2.7
-    algorithms = ('md5', 'sha1', 'sha224', 'sha256', 'sha384', 'sha512') + ('none',)
+    algorithms = hashlib.algorithms + ('none',)
     checksum.add_argument('--checksum', choices=algorithms, default='sha256',
         help='checksum to use for images')
 

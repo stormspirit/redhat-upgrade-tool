@@ -13,7 +13,7 @@ Source0:        https://github.com/downloads/dashea/redhat-upgrade-tool/%{name}-
 BuildRoot:      %{_tmppath}/%{name}-root
 
 Requires:       mkinitrd
-Requires:       m2crypto
+Requires:       python-hashlib
 
 %if 0%{?fedora} >= 17
 # Require updates to various packages where necessary to fix bugs.

@@ -104,7 +104,7 @@ Some details about the file format:
 
 import ConfigParser
 from ConfigParser import RawConfigParser
-import M2Crypto
+import hashlib
 import time
 from os.path import join, normpath
 import logging
@@ -118,7 +118,7 @@ from redhat_upgrade_tool import pkgname
 log = logging.getLogger(pkgname+".treeinfo")
 
 def hexdigest(filename, algo, blocksize=8192):
-    hasher = M2Crypto.EVP.MessageDigest(algo)
+    hasher = hashlib.new(algo)
     fobj = open(filename, 'rb')
     try:
         while True:
@@ -128,7 +128,7 @@ def hexdigest(filename, algo, blocksize=8192):
             hasher.update(data)
     finally:
         fobj.close()
-    return "".join([("%02x" % ord(i)) for i in hasher.final()])
+    return hasher.hexdigest()
 
 __all__ = ['Treeinfo', 'TreeinfoError']
 
