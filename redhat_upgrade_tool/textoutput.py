@@ -39,7 +39,7 @@ class SimpleProgress(object):
                  tty=sys.stdout):
         self.maxval = maxval
         self.curval = 0
-        self.formatstr = "{0.prefix} {0.percent:2}% {0.bar}"
+        self.formatstr = "%s %2d %s"
         self.barstyle = barstyle
         self.prefix = prefix
         # update screen at a certain interval
@@ -55,19 +55,18 @@ class SimpleProgress(object):
     def percent(self):
         return int(100*self.curval / float(self.maxval))
 
-    bar_fmt = "{l_br}{barchar:<{width}}{r_br}"
+    bar_fmt = '%s%-*s%s'
     @property
     def bar(self):
-        otherstuff = self.formatstr.replace("{0.bar}","")
-        barwidth = self.width - len(otherstuff.format(self)) - 2 # 2 brackets
+        barwidth = self.width - len("%s %s%% " % (self.prefix, self.percent)) - 2 # 2 brackets
         fillpart = barwidth * self.curval / self.maxval
-        return self.bar_fmt.format(l_br=self.barstyle[0],
-                                   barchar=self.barstyle[1] * fillpart,
-                                   r_br=self.barstyle[2],
-                                   width=barwidth)
+        return self.bar_fmt % (self.barstyle[0], 
+                               barwidth,
+                               self.barstyle[1] * fillpart,
+                               self.barstyle[2])
 
     def __str__(self):
-        return self.formatstr.format(self)
+        return self.formatstr % (self.prefix, self.percent, self.bar)
 
     def update(self, newval, forceupdate=False):
         now = time.time()
