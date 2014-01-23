@@ -292,10 +292,10 @@ class UpgradeDownloader(yum.YumBase):
         localpkgs = [p for p in pkgs if os.path.exists(p.localPkg())]
         total = len(localpkgs)
         # XXX: multithreading?
-        for num, p in enumerate(localpkgs, 1):
+        for num, p in enumerate(localpkgs):
             local = p.localPkg()
             if hasattr(callback, "verify") and callable(callback.verify):
-                callback.verify(num, total, local, None)
+                callback.verify(num + 1, total, local, None)
             ok = self.verifyPkg(local, p, False) # result will be cached by yum
         log.info("beginning package download...")
         updates = self._downloadPackages(callback)
