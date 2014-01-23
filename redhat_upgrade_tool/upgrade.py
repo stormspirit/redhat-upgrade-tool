@@ -61,12 +61,16 @@ class TransactionSet(object):
             key = path
         fileobj = open(path)
         try:
-            retval, header = self.hdrFromFdno(fileobj)
+            header = self.hdrFromFdno(fileobj.fileno())
         finally:
             fileobj.close()
-        if retval != rpm.RPMRC_OK:
-            raise rpm.error("error reading package header")
-        if not self.addInstall(header, key, upgrade):
+
+        if upgrade:
+            how = 'u'
+        else:
+            how = 'i'
+
+        if not self.addInstall(header, key, how):
             raise rpm.error("adding package to transaction failed")
 
     def __del__(self):
