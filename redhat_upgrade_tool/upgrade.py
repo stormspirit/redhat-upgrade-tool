@@ -50,7 +50,7 @@ class TransactionSet(object):
         return rv
 
     def check(self, *args, **kwargs):
-        self._ts.check(self, *args, **kwargs)
+        self._ts.check(*args, **kwargs)
         # NOTE: rpm.TransactionSet throws out all problems but these
         return [p for p in self.problems()
                   if p.type in (rpm.RPMPROB_CONFLICT, rpm.RPMPROB_REQUIRES)]
