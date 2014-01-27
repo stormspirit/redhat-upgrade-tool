@@ -150,9 +150,9 @@ class TransactionSet(object):
     def __getattr__(self, name):
         return getattr(self._ts, name)
 
-    def run(self, callback, data, probfilter):
+    def run(self, callback, data):
         log.debug('ts.run()')
-        rv = self._ts.run(callback, data, probfilter)
+        rv = self._ts.run(callback, data)
         problems = self.problems()
         if rv != rpm.RPMRC_OK and problems:
             raise TransactionError(problems)
@@ -160,7 +160,6 @@ class TransactionSet(object):
 
     def check(self, *args, **kwargs):
         self._ts.check(*args, **kwargs)
-        # NOTE: rpm.TransactionSet throws out all problems but these
 
         return [p for p in [TransactionProblem(ps) for ps in self.problems()]
                   if p.type in (rpm.RPMPROB_CONFLICT, rpm.RPMPROB_REQUIRES)]
@@ -364,8 +363,7 @@ class RPMUpgrade(object):
 
     def run_transaction(self, callback):
         assert callable(callback.callback)
-        probfilter = ~rpm.RPMPROB_FILTER_DISKSPACE
-        rv = self.ts.run(callback.callback, None, probfilter)
+        rv = self.ts.run(callback.callback, None)
         if rv != 0:
             log.info("ts completed with problems - code %u", rv)
         return rv
