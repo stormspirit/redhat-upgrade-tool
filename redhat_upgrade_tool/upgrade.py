@@ -152,11 +152,11 @@ class TransactionSet(object):
 
     def run(self, callback, data):
         log.debug('ts.run()')
-        rv = self._ts.run(callback, data)
+        rlist = self._ts.run(callback, data)
         problems = self.problems()
-        if rv != rpm.RPMRC_OK and problems:
+        if rlist is None and problems:
             raise TransactionError(problems)
-        return rv
+        return rlist
 
     def check(self, *args, **kwargs):
         self._ts.check(*args, **kwargs)
@@ -363,10 +363,10 @@ class RPMUpgrade(object):
 
     def run_transaction(self, callback):
         assert callable(callback.callback)
-        rv = self.ts.run(callback.callback, None)
-        if rv != 0:
-            log.info("ts completed with problems - code %u", rv)
-        return rv
+        rlist = self.ts.run(callback.callback, None)
+        if rlist is None:
+            log.info("ts completed with problems")
+        return rlist
 
     def test_transaction(self, callback):
         old_flags = self.ts.setFlags(rpm.RPMTRANS_FLAG_TEST)
