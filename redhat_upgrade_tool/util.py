@@ -107,8 +107,8 @@ def kernelver(filename):
         buf = f.read(256)
     finally:
         f.close()
-    uname, nul, rest = buf.partition('\0')
-    version, spc, rest = uname.partition(' ')
+    uname, rest = buf.split('\0', 1)
+    version, rest = uname.split(' ', 1)
     return version
 
 def df(mnt, reserved=False):
