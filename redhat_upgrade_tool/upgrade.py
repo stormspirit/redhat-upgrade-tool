@@ -33,6 +33,115 @@ log = logging.getLogger(pkgname+'.upgrade')
 from redhat_upgrade_tool import _
 from redhat_upgrade_tool.util import df, hrsize
 
+import re
+
+class TransactionProblem(object):
+    """Container more or less like a rpm.prob as it existed in rpm 4.8.0
+       (i.e., like what's in RHEL 6).
+
+       In new rpm, rpm.ts.problems returns an iterator of objects that
+       contain problem types, package information, and other helpful
+       attributes. But we walk herein the old paths, so we just get a
+       pile of strings. This class parses the strings back out into something
+       useful.
+    """
+
+    def __init__(self, problemstr):
+        ### XXX BIG FAT WARNING XXX ###
+        # The strings are copied from rpmProblemString in lib/rpmps.c. The
+        # strings are translated. redhat-upgrade-tool doesn't translate
+        # anything or set locales or any of that jazz, so for now we just
+        # the English strings as if LANG=C, but if we ever do start translating
+        # stuff, this thing is going to be a problem.
+
+        self.type = None
+        self.pkgNEVR = None
+        self.altNEVR = None
+        self.key = None
+        self._str = problemstr
+        self._num = None
+
+        m = re.match(r'^package (.*) is intended for a (.*) architecture$', problemstr)
+        if m:
+            self.type = rpm.RPMPROB_BADARCH
+            self.pkgNEVR = m.group(1)
+
+        if not m:
+            m = re.match(r'^package (.*) is intended for a (.*) operating system$', problemstr)
+            if m:
+                self.type = rpm.RPMPROB_BADOS
+                self.pkgNEVR = m.group(1)
+
+        if not m:
+            m = re.match(r'^package (.*) is already installed$', problemstr)
+            if m:
+                self.type = rpm.RPMPROB_PKG_INSTALLED
+                self.pkgNEVR = m.group(1)
+
+        if not m:
+            m = re.match(r'^path (.*) in package (.*) is not relocatable$', problemstr)
+            if m:
+                self.type = rpm.RPMPROB_BADRELOCATE
+                self.pkgNEVR = m.group(2)
+
+        if not m:
+            m = re.match(r'^file (.*) conflicts between attempted installs of (.*) and (.*)$', problemstr)
+            if m:
+                self.type = rpm.RPMPROB_NEW_FILE_CONFLICT
+                self.pkgNEVR = m.group(2)
+                self.altNEVR = m.group(3)
+
+        if not m:
+            m = re.match(r'^file (.*) from install of (.*) conflicts with file from package (.*)$', problemstr)
+            if m:
+                self.type = rpm.RPMPROB_FILE_CONFLICT
+                self.pkgNEVR = m.group(2)
+                self.altNEVR = m.group(3)
+
+        if not m:
+            m = re.match(r'^package (.*) \(which is newer than (.*)\) is already installed$', problemstr)
+            if m:
+                self.type = rpm.RPMPROB_OLDPACKAGE
+                self.altNEVR = m.group(1)
+                self.pkgNEVR = m.group(2)
+
+        if not m:
+            m = re.match(r'^installing package (.*) needs ([0-9]+)(.)B on the (.*) filesystem$', problemstr)
+            if m:
+                self.type = rpm.RPMPROB_DISKSPACE
+                self.pkgNEVR = m.group(1)
+
+        if not m:
+            m = re.match(r'^installing package (.*) needs ([0-9]+) inodes on the (.*) filesystem$', problemstr)
+            if m:
+                self.type = rpm.RPMPROB_DISKNODES
+                self.pkgNEVR = m.group(1)
+
+        if not m:
+            m = re.match(r'^package %s pre-transaction syscall(s): %s failed: %s$', problemstr)
+            if m:
+                self.type = rpm.RPMPROB_BADPRETRANS
+                self.pkgNEVR = m.group(1)
+
+        # NB: RPMPROB_REQUIRES and RPMPROB_CONFLICT lose information on altNEVR, since
+        # rpmProblemString is actually printing altNEVR+2
+        if not m:
+            m = re.match(r'^(.*) is needed by (\(installed\) )?(.*)$', problemstr)
+            if m:
+                self.type = rpm.RPMPROB_REQUIRES
+                self.altNEVR = m.group(1)
+                self.pkgNEVR = m.group(3)
+
+        if not m:
+            m = re.match(r'^(.*) conflicts with (\(installed\) )?(.*)$', problemstr)
+            if m:
+                self.type = rpm.RPMPROB_CONFLICT
+                self.altNEVR = m.group(1)
+                self.pkgNEVR = m.group(3)
+
+    def __str__(self):
+        return self._str
+
 class TransactionSet(object):
     def __init__(self, *args, **kwargs):
         self._ts = TransactionSetCore(*args, **kwargs)
@@ -52,7 +161,8 @@ class TransactionSet(object):
     def check(self, *args, **kwargs):
         self._ts.check(*args, **kwargs)
         # NOTE: rpm.TransactionSet throws out all problems but these
-        return [p for p in self.problems()
+
+        return [p for p in [TransactionProblem(ps) for ps in self.problems()]
                   if p.type in (rpm.RPMPROB_CONFLICT, rpm.RPMPROB_REQUIRES)]
 
     def add_install(self, path, key=None, upgrade=False):
