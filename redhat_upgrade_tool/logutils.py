@@ -41,7 +41,7 @@ class Formatter(logging.Formatter):
         logging.FATAL:   '(FF)',
     }
 
-    defaultfmt="[%(reltime)10.3f] %(levelsym)s %(name)s:%(funcName)s() %(message)s"
+    defaultfmt="[%(reltime)10.3f] %(levelsym)s %(name)s:%(message)s"
     def __init__(self, fmt=None, datefmt=None):
         if fmt is None:
             fmt = self.defaultfmt
