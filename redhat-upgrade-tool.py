@@ -181,7 +181,8 @@ def main(args):
     # --- Here's where we summarize potential problems. ---
 
     # list packages without updates, if any
-    missing = sorted(f.find_packages_without_updates(), key=lambda p:p.nevra)
+    missing = sorted(f.find_packages_without_updates(), 
+            key=lambda p: "%s-%s:%s-%s.%s" % (p.name, p.epoch, p.ver, p.rel, p.arch))
     if missing:
         message(_('Packages without updates:'))
         for p in missing:
