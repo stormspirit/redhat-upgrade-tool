@@ -13,6 +13,9 @@ Source0:        %{name}-%{version}.tar.xz
 Requires:       systemd >= 44-23
 Requires:       grubby
 
+# Require for preupgr --riskcheck
+Requires:       preupgrade-assistant >= 1.0.2-4
+
 BuildRequires:  python2-devel
 BuildRequires:  systemd-devel
 BuildRequires:  asciidoc
